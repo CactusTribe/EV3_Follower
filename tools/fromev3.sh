@@ -1,2 +1,2 @@
-EVA="robot@ev3dev.local:~/"
-scp $EVA$1 .
+EV3="robot@ev3dev.local:~/"
+scp $EV3$1 .
