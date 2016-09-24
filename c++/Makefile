@@ -7,10 +7,11 @@ NAME=main
 
 all: $(NAME)
 
-main: $(BIN_PATH)main.o
+main: $(BIN_PATH)main.o $(BIN_PATH)ev3dev.o
 	$(CPP) -o $(BIN_PATH)$@ $^
 
 main.o: $(HEADER_PATH)main.hpp
+ev3dev.o: $(HEADER_PATH)ev3dev.hpp
 
 $(BIN_PATH)%.o: $(SRC_PATH)%.cpp
 	$(CPP) -o $@ -c $<
@@ -22,4 +23,4 @@ mrproper: clean
 	rm -rf $(BIN_PATH)$(NAME)
 
 send:
-	sh /opt/toev3.sh $(NAME)
+	sh /opt/toev3.sh $(BIN_PATH)$(NAME)
