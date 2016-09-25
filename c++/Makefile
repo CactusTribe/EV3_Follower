@@ -1,26 +1,37 @@
-CPP=/usr/local/carlson-minot/crosscompilers/bin/arm-none-linux-gnueabi-g++ --std=c++11 -Wall
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+	CPP=g++ --std=c++11 -Wall
+endif
+ifeq ($(UNAME_S),Darwin)
+	CPP=/usr/local/carlson-minot/crosscompilers/bin/arm-none-linux-gnueabi-g++ --std=c++11 -Wall
+endif
 
-SRC_PATH = src/
-HEADER_PATH = header/
-BIN_PATH = bin/
-NAME=main
+EXEC = Main
 
-all: $(NAME)
+SRC_DIR = src
+BIN_DIR = bin
+EXEC_FILE= $(BIN_DIR)/$(EXEC)
 
-main: $(BIN_PATH)main.o $(BIN_PATH)ev3dev.o
-	$(CPP) -o $(BIN_PATH)$@ $^
+SRC_FILES= $(wildcard $(SRC_DIR)/**.cpp) $(wildcard $(SRC_DIR)/**/**.cpp) $(wildcard $(SRC_DIR)/**/**/**.cpp) $(wildcard $(SRC_DIR)/**/**/**/**.cpp) 
+OBJ_FILES= $(patsubst %.cpp, %.o,  $(subst $(SRC_DIR), $(BIN_DIR),$(SRC_FILES)))
 
-main.o: $(HEADER_PATH)main.hpp
-ev3dev.o: $(HEADER_PATH)ev3dev.hpp
+all: $(EXEC_FILE)
 
-$(BIN_PATH)%.o: $(SRC_PATH)%.cpp
-	$(CPP) -o $@ -c $<
+$(EXEC_FILE): $(OBJ_FILES)
+	$(CPP) -o $@ $^
+
+$(OBJ_FILES): $(BIN_DIR)/%.o : $(SRC_DIR)/%.cpp
+	@mkdir -p $(dir $@)
+	$(CPP) -c -o $@ $^
+
+run:
+	./$(EXEC_FILE)
 
 clean:
-	rm -rf $(BIN_PATH)*.o
+	rm -rf $(BIN_DIR)/*.o
 
 mrproper: clean
-	rm -rf $(BIN_PATH)$(NAME)
+	rm -rf $(BIN_DIR)/*
 
 send:
-	sh /opt/toev3.sh $(BIN_PATH)$(NAME)
+	sh /opt/toev3.sh $(EXEC_FILE)

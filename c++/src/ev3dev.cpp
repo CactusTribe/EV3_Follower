@@ -31,7 +31,7 @@
 //~autogen
 //-----------------------------------------------------------------------------
 
-#include "../header/ev3dev.h"
+#include "ev3dev.h"
 
 #include <iostream>
 #include <sstream>
