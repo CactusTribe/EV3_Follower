@@ -1,0 +1,11 @@
+* <2016-10-13>
+** Fait:
+   - Git
+   - Création d'un régulateur de tension
+   - Installer ev3dev
+   - Tests en python et en C++
+   - Cross-compilé le C++
+   - Fait un programme qui fait tourner le moteur
+** A faire:
+   - Monter le robot
+
