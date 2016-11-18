@@ -1,3 +1,11 @@
+* <2016-11-14>
+** Fait:
+   - Monté le robot
+   - Customisation du robot
+** A faire:
+   - Calibration
+   - Premier algorithme de suivi de ligne
+
 * <2016-10-13>
 ** Fait:
    - Git
