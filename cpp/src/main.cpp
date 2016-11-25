@@ -15,9 +15,9 @@ int main(){
 	large_motor  motor_L(OUTPUT_D); // PORT (A|B|C|D)
 
 	ColorSensor sn_color;
-	sn_color.calibration(50);
+	sn_color.calibration();
 
-	ColorRGB color = sn_color.getColor();
+	ColorRGB color = sn_color.getColorRGB();
 	cout << color << endl;
 
 	ColorRGB c1(19, 401, 201);

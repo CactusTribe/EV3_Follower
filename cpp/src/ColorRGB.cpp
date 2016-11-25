@@ -31,6 +31,21 @@ int ColorRGB::blue()
 	return _blue;
 }
 
+void ColorRGB::set_red(int r)
+{
+	_red = r;
+}
+
+void ColorRGB::set_green(int g)
+{
+	_green = g;
+}
+
+void ColorRGB::set_blue(int b)
+{
+	_blue = b;
+}
+
 std::ostream& operator<<(std::ostream& out, ColorRGB& color){
 	out << "[" << color._red << "," << color._green << "," << color._blue << "]";
 	return out;

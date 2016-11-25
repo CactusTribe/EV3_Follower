@@ -14,6 +14,10 @@ public:
 	int green();
 	int blue();
 
+	void set_red(int r);
+	void set_green(int g);
+	void set_blue(int b);
+
 private:
 	int _red = -1;
 	int _green = -1;
