@@ -19,7 +19,7 @@ int main(){
 	sn_color.calibration();
 
 	while(true){
-		cout << " -> Scan color (Press Enter to validate): ";
+		cout << " -> Scan color (Press Enter): ";
 		cin.ignore();
 
 		Color color = sn_color.getColor();
