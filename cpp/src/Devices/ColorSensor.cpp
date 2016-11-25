@@ -42,7 +42,7 @@ void ColorSensor::calibration()
 		std::cout << " -> " << *(_dico_colors[i]) << " reference. (Press Enter to validate): ";
 		std::cin.ignore();
 		sampling(samples, min, max);
-		std::cout << "  > min" << min << " max" << max << std::endl;
+		//std::cout << "  > min" << min << " max" << max << std::endl;
 
 		_dico_colors[i]->setMin(min);
 		_dico_colors[i]->setMax(max);
