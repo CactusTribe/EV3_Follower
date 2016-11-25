@@ -1,5 +1,6 @@
 #include <string>
 #include <sstream>
+#include <math.h>
 #include "ColorSensor.h"
 
 using namespace ev3dev;
@@ -53,6 +54,26 @@ void ColorSensor::calibration()
 	
 }
 
+void ColorSensor::sampling(int samples, ColorRGB& average)
+{
+	int cur_r, cur_g, cur_b = 0;
+
+	for(int i=0; i<samples; i++){
+		cur_r = _sensor->red();
+		cur_g = _sensor->green();
+		cur_b = _sensor->blue();
+
+		average.set_red(average.red() + cur_r);
+		average.set_green(average.green() + cur_g);
+		average.set_blue(average.blue() + cur_b);
+	}
+
+	// Moyenne 
+	average.set_red(average.red() / samples);
+	average.set_green(average.green() / samples);
+	average.set_blue(average.blue() / samples);
+}
+
 void ColorSensor::sampling(int samples, ColorRGB& min, ColorRGB& max)
 {
 	min.set_red(1020);
@@ -86,24 +107,27 @@ void ColorSensor::sampling(int samples, ColorRGB& min, ColorRGB& max)
 			max.set_blue(cur_b);
 	}
 
-	sleep(0.3);
 }
 
 Color ColorSensor::getColor()
 {
-	ColorRGB current(_sensor->red(), _sensor->green(), _sensor->blue());
+	ColorRGB current;
+	ColorEntry entry(Color::UNKNOW);
+	int distance = 1020;
 
-	std::cout << current << std::endl;
+	sampling(50, current);
 
 	for(uint i=0; i<_dico_colors.size(); i++){
 		ColorRGB min = _dico_colors[i]->getMin();
 		ColorRGB max = _dico_colors[i]->getMax();
-
-		if((current >= min) && (current <= max))
-			return _dico_colors[i]->getColor();
+	
+		if( (current.distanceOf(min) < distance) || (current.distanceOf(max) < distance) ){
+			distance = current.distanceOf(min);
+			entry = *(_dico_colors[i]);
+		}
 	}
 
-	return Color::UNKNOW;
+	return entry.getColor();
 }
 
 

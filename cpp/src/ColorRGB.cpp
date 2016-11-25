@@ -1,3 +1,4 @@
+#include <math.h>
 #include "ColorRGB.h"
 
 ColorRGB::ColorRGB()
@@ -44,6 +45,12 @@ void ColorRGB::set_green(int g)
 void ColorRGB::set_blue(int b)
 {
 	_blue = b;
+}
+
+int ColorRGB::distanceOf(ColorRGB& color)
+{
+	int distance = sqrt(pow(_red - color.red(), 2) + pow(_green - color.green(), 2) + pow(_blue - color.blue(), 2));
+	return distance;
 }
 
 std::ostream& operator<<(std::ostream& out, ColorRGB& color){

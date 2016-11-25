@@ -19,6 +19,7 @@ public:
 	Color getColor();
 	ColorRGB getColorRGB();
 	void calibration();
+	void sampling(int samples, ColorRGB& average);
 	void sampling(int samples, ColorRGB& min, ColorRGB& max);
 
 private:

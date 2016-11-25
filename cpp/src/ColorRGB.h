@@ -18,10 +18,12 @@ public:
 	void set_green(int g);
 	void set_blue(int b);
 
+	int distanceOf(ColorRGB& color);
+
 private:
-	int _red = -1;
-	int _green = -1;
-	int _blue = -1;
+	int _red = 0;
+	int _green = 0;
+	int _blue = 0;
 
 
 friend std::ostream& operator<<(std::ostream& out, ColorRGB& color);
