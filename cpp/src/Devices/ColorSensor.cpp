@@ -41,7 +41,7 @@ void ColorSensor::calibration()
 		std::cout << " -> " << *(_dico_colors[i]) << " reference. (Press Enter to validate): ";
 		std::cin.ignore();
 		sampling(samples, min, max);
-		//std::cout << "  > min" << min << " max" << max << std::endl;
+		std::cout << "  > min" << min << " max" << max << std::endl;
 
 		_dico_colors[i]->setMin(min);
 		_dico_colors[i]->setMax(max);
@@ -85,6 +85,25 @@ void ColorSensor::sampling(int samples, ColorRGB& min, ColorRGB& max)
 		if(cur_b > max.blue())
 			max.set_blue(cur_b);
 	}
+
+	sleep(0.3);
+}
+
+Color ColorSensor::getColor()
+{
+	ColorRGB current(_sensor->red(), _sensor->green(), _sensor->blue());
+
+	std::cout << current << std::endl;
+
+	for(uint i=0; i<_dico_colors.size(); i++){
+		ColorRGB min = _dico_colors[i]->getMin();
+		ColorRGB max = _dico_colors[i]->getMax();
+
+		if((current >= min) && (current <= max))
+			return _dico_colors[i]->getColor();
+	}
+
+	return Color::UNKNOW;
 }
 
 

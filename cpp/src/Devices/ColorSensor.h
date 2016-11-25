@@ -16,6 +16,7 @@ public:
 	ColorSensor();
 	virtual ~ColorSensor();
 
+	Color getColor();
 	ColorRGB getColorRGB();
 	void calibration();
 	void sampling(int samples, ColorRGB& min, ColorRGB& max);
