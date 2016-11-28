@@ -109,6 +109,11 @@ void ColorSensor::sampling(int samples, ColorRGB& min, ColorRGB& max)
 
 }
 
+void ColorSensor::save_calibration(std::string file)
+{
+	
+}
+
 Color ColorSensor::getColor()
 {
 	ColorRGB current;

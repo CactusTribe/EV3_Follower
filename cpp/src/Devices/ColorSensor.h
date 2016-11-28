@@ -16,11 +16,13 @@ public:
 	ColorSensor();
 	virtual ~ColorSensor();
 
-	Color getColor();
-	ColorRGB getColorRGB();
 	void calibration();
 	void sampling(int samples, ColorRGB& average);
 	void sampling(int samples, ColorRGB& min, ColorRGB& max);
+	void save_calibration(std::string file);
+
+	Color getColor();
+	ColorRGB getColorRGB();
 
 private:
 	ev3dev::color_sensor* _sensor;

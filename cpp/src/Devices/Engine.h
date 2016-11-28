@@ -7,7 +7,7 @@
 class Engine {
 
 public:
-	Engine(ev3dev::large_motor r, ev3dev::large_motor l);
+	Engine();
 	virtual ~Engine();
 
 	void setSpeed(int speed);
@@ -15,10 +15,12 @@ public:
 
 	void run();
 	void stop();
+	bool running();
 
 private:
-	int _speed = 40;
-	Direction _direction = Direction::FORWARD; 
+	int _speed = 20;
+	bool _run = false;
+	Direction _direction; 
 	ev3dev::large_motor* _motor_R;
 	ev3dev::large_motor* _motor_L;
 

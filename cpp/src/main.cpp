@@ -9,20 +9,51 @@
 using namespace std;
 using namespace ev3dev;
 
+void scan_color(ColorSensor& sn_color);
+void line_follow(Engine& engine, ColorSensor& sn_color);
 
 int main(){
 
-	large_motor  motor_R(OUTPUT_A); // PORT (A|B|C|D)
-	large_motor  motor_L(OUTPUT_D); // PORT (A|B|C|D)
-
+	Engine engine;
 	ColorSensor sn_color;
-	sn_color.calibration();
 
+	sn_color.calibration();
+	//scan_color(sn_color);
+	
+	//line_follow(engine, sn_color);
+
+	return 0;
+}
+
+void line_follow(Engine& engine, ColorSensor& sn_color){
+
+	while(true){
+		if(sn_color.getColor() == Color::BLACK){
+			
+			if(engine.running() == false){
+				cout << "BLACK -> Start engine" << endl;
+				engine.run();
+			}
+			else{
+				cout << "BLACK -> Engine running" << endl;
+			}
+
+		}
+		else{
+			cout << "WHITE -> Stop engine" << endl;
+			engine.stop();
+		}
+
+	}
+
+}
+
+void scan_color(ColorSensor& cs){
 	while(true){
 		cout << " -> Scan color (Press Enter): ";
 		cin.ignore();
 
-		Color color = sn_color.getColor();
+		Color color = cs.getColor();
 		switch(color){
 			case Color::RED:
 				cout << "RED" << endl;
@@ -52,46 +83,5 @@ int main(){
 				cout << "UNKNOW" << endl;
 			break;
 		}
-
 	}
-
-/*
-	ColorRGB color = sn_color.getColorRGB();
-	cout << color << endl;
-
-	ColorRGB c1(19, 401, 201);
-	ColorRGB c2(100, 400, 200);
-
-	cout << c1 << endl;
-	cout << c2 << endl;
-	cout << "c1 >= c2 : " << (c1>=c2) << endl;
-	cout << "c1 <= c2 : " << (c1<=c2) << endl;
-*/
-
-/*
-	Engine engine(motor_R, motor_L);
-	engine.setDirection(Direction::FORWARD);
-	engine.run();
-
-	sleep(1);
-	engine.stop();
-	sleep(1);
-	
-	engine.setDirection(Direction::BACKWARD);
-	engine.run();
-	sleep(1);
-	engine.stop();
-
-	engine.setDirection(Direction::LEFT);
-	engine.run();
-	sleep(1);
-	engine.stop();
-
-	engine.setDirection(Direction::RIGHT);
-	engine.run();
-	sleep(1);
-	engine.stop();
-*/
-
-	return 0;
 }
