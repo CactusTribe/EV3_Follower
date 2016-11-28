@@ -1,10 +1,10 @@
 #include <iostream>
 #include <unistd.h>
-#include "ev3dev.h"
-#include "Devices/Engine.h"
-#include "Devices/ColorSensor.h"
-#include "ColorRGB.h"
-#include "Color.h"
+#include <string.h>
+
+#include "devices/Engine.h"
+#include "devices/ColorSensor.h"
+#include "commons/Color.h"
 
 using namespace std;
 using namespace ev3dev;
@@ -12,13 +12,22 @@ using namespace ev3dev;
 void scan_color(ColorSensor& sn_color);
 void line_follow(Engine& engine, ColorSensor& sn_color);
 
-int main(){
+int main(int argc, char* argv[]){
 
 	Engine engine;
 	ColorSensor sn_color;
 
-	sn_color.calibration();
-	//scan_color(sn_color);
+	if(argc > 1){
+		if(strcmp(argv[1], "-c") == 0){
+			sn_color.calibration();
+			sn_color.save_calibration("calibration.calib");
+			exit(0);
+		}
+	}
+
+
+	sn_color.open_calibration("calibration.calib");
+	scan_color(sn_color);
 	
 	//line_follow(engine, sn_color);
 

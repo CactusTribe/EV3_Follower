@@ -1,5 +1,6 @@
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <math.h>
 #include "ColorSensor.h"
 
@@ -42,7 +43,6 @@ void ColorSensor::calibration()
 		std::cout << " -> " << *(_dico_colors[i]) << " reference. (Press Enter): ";
 		std::cin.ignore();
 		sampling(samples, min, max);
-		//std::cout << "  > min" << min << " max" << max << std::endl;
 
 		_dico_colors[i]->setMin(min);
 		_dico_colors[i]->setMax(max);
@@ -111,7 +111,56 @@ void ColorSensor::sampling(int samples, ColorRGB& min, ColorRGB& max)
 
 void ColorSensor::save_calibration(std::string file)
 {
-	
+	ColorRGB min;
+	ColorRGB max;
+
+	std::ofstream out_file;
+	out_file.open(file);
+
+	for(uint i=0; i<_dico_colors.size(); i++){
+		min = _dico_colors[i]->getMin();
+		max = _dico_colors[i]->getMax();
+
+		out_file << min << max << "\n";
+
+	}
+
+	out_file.close();
+}
+
+void ColorSensor::open_calibration(std::string file)
+{
+
+	std::string line;
+	std::ifstream in_file(file);
+
+	int no_line = 0;
+
+  if (in_file.is_open()){
+    while ( getline (in_file,line) )
+    {
+    	std::vector<std::string> values;
+    	std::istringstream iss(line);
+
+			do
+			{
+				std::string sub;
+				iss >> sub;
+				values.push_back(sub);
+			} while (iss);
+
+    	ColorRGB min(std::stoi(values[0]), std::stoi(values[1]), std::stoi(values[2]));
+			ColorRGB max(std::stoi(values[3]), std::stoi(values[4]), std::stoi(values[5]));
+
+			_dico_colors[no_line]->setMin(min);
+			_dico_colors[no_line]->setMax(max);
+
+			no_line++;
+    }
+
+    in_file.close();
+  }
+  else std::cout << "Unable to open file" << std::endl; 
 }
 
 Color ColorSensor::getColor()

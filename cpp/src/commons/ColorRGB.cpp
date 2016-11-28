@@ -54,7 +54,7 @@ int ColorRGB::distanceOf(ColorRGB& color)
 }
 
 std::ostream& operator<<(std::ostream& out, ColorRGB& color){
-	out << "[" << color._red << "," << color._green << "," << color._blue << "]";
+	out << color._red << " " << color._green << " " << color._blue << " ";
 	return out;
 }
 

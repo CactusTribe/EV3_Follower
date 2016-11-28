@@ -1,8 +1,8 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "../ev3dev.h"
-#include "Direction.h"
+#include "../libs/ev3dev.h"
+#include "../commons/Direction.h"
 
 class Engine {
 

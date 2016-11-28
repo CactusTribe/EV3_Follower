@@ -3,11 +3,11 @@
 
 #include <unistd.h>
 #include <vector>
-#include "../ev3dev.h"
 
-#include "../Color.h"
-#include "../ColorRGB.h"
-#include "../ColorEntry.h"
+#include "../libs/ev3dev.h"
+#include "../commons/Color.h"
+#include "../commons/ColorRGB.h"
+#include "../commons/ColorEntry.h"
 
 
 class ColorSensor {
@@ -20,6 +20,7 @@ public:
 	void sampling(int samples, ColorRGB& average);
 	void sampling(int samples, ColorRGB& min, ColorRGB& max);
 	void save_calibration(std::string file);
+	void open_calibration(std::string file);
 
 	Color getColor();
 	ColorRGB getColorRGB();
