@@ -41,10 +41,12 @@ int main(int argc, char* argv[]){
 void line_follow(Engine& engine, ColorSensor& sn_color){
 	clock_t begin_time = 0;
 	double elapsed_time = 0;
+	double search_time = 0.2;
 	bool on_line = false;
+	Direction lastDir = Direction::RIGHT;
 
 	while(true){
-		if(sn_color.getColor() == Color::BLACK){
+		if(sn_color.getColor() != Color::WHITE){
 			
 			cout << "BLACK -> FORWARD" << endl;
 			engine.setDirection(Direction::FORWARD);
@@ -57,79 +59,123 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 			engine.stop();
 			on_line = false;
 
-			// Cherche la ligne à droite
-			cout << " -> SEARCH RIGHT" << endl;
-			engine.setDirection(Direction::RIGHT);
+			
+			//-------------------------------------------
+			// SEARCH LASTDIR
+			//-------------------------------------------
+			cout << " -> SEARCH LASTDIR" << endl;
+			engine.setDirection(lastDir);
 			engine.run();
 			begin_time = clock();
 
-			while(elapsed_time < 0.1) {
-				if(sn_color.getColor() == Color::BLACK){
+			while(elapsed_time < search_time) {
+				if(sn_color.getColor() != Color::WHITE){
 					cout << "LINE FOUND" << endl;
 					on_line = true;
 					break;
 				}
 
-				cout << "LINE NOT FOUND" << endl;
 				elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
-				std::cout << elapsed_time << std::endl;
 			}
 			engine.stop();
 			sleep(0.5);
 
-
 			if(on_line == false){
-				// Cherche la ligne à gauche
-				cout << " -> SEARCH LEFT" << endl;
-				engine.setDirection(Direction::LEFT);
-				engine.run();
-				begin_time = clock();
+				// Retour sur l'alignement
 				elapsed_time = 0;
 
-				while(elapsed_time < 0.2) {
-					if(sn_color.getColor() == Color::BLACK){
-						cout << "LINE FOUND" << endl;
-						on_line = true;
-						break;
-					}
-
-					cout << "LINE NOT FOUND" << endl;
-					elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
-					std::cout << elapsed_time << std::endl;
+				if(lastDir == Direction::LEFT){
+					engine.setDirection(Direction::RIGHT);
+					lastDir = Direction::RIGHT;
+				}
+				else if(lastDir == Direction::RIGHT){
+					engine.setDirection(Direction::LEFT);
+					lastDir = Direction::LEFT;
 				}
 
-				//Retour sur l'alignement
-				engine.setDirection(Direction::RIGHT);
 				engine.run();
 				begin_time = clock();
-				elapsed_time = 0;
 
-				while(elapsed_time < 0.1) {
+				while(elapsed_time < search_time) {
 					elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
 				}
 
 				engine.stop();
-				sleep(0.5);			
+				sleep(0.5);	
 			}
+			//------------------------------------------
 
+
+			//-------------------------------------------
+			// SEARCH -LASTDIR
+			//-------------------------------------------
 			if(on_line == false){
-				// Cherche la ligne devant
-				cout << " -> SEARCH FORWARD" << endl;
-				engine.setDirection(Direction::FORWARD);
+				// Cherche la ligne à gauche
+				cout << " -> SEARCH -LASTDIR" << endl;
+				elapsed_time = 0;
+				engine.setDirection(lastDir);
 				engine.run();
 				begin_time = clock();
-				elapsed_time = 0;
+				
 
-				while(elapsed_time < 0.5) {
-					if(sn_color.getColor() == Color::BLACK){
+				while(elapsed_time < search_time) {
+					if(sn_color.getColor() != Color::WHITE){
 						cout << "LINE FOUND" << endl;
 						on_line = true;
 						break;
 					}
 
-					cout << "LINE NOT FOUND" << endl;
 					elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
-					std::cout << elapsed_time << std::endl;
+				}
+				engine.stop();
+				sleep(0.5);	
+
+				if(on_line == false){
+					//Retour sur l'alignement
+
+					if(lastDir == Direction::LEFT){
+						engine.setDirection(Direction::RIGHT);
+						lastDir = Direction::RIGHT;
+					}
+					else if(lastDir == Direction::RIGHT){
+						engine.setDirection(Direction::LEFT);
+						lastDir = Direction::LEFT;
+					}
+
+					engine.run();
+					begin_time = clock();
+					elapsed_time = 0;
+
+					while(elapsed_time < search_time) {
+						elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
+					}
+
+					engine.stop();
+					sleep(0.5);		
+				}	
+			}
+			//------------------------------------------
+
+
+			//-------------------------------------------
+			// SEARCH FORWARD
+			//-------------------------------------------
+			if(on_line == false){
+				// Cherche la ligne devant
+				cout << " -> SEARCH FORWARD" << endl;
+				elapsed_time = 0;
+				engine.setDirection(Direction::FORWARD);
+				engine.run();
+				begin_time = clock();
+				
+				while(elapsed_time < search_time) {
+					if(sn_color.getColor() != Color::WHITE){
+						cout << "LINE FOUND" << endl;
+						on_line = true;
+						break;
+					}
+
+					elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
 				}		
 				engine.stop();
 				sleep(0.5);		

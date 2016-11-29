@@ -169,7 +169,7 @@ Color ColorSensor::getColor()
 	ColorEntry entry(Color::UNKNOW);
 	int distance = 1020;
 
-	sampling(50, current);
+	sampling(5, current);
 
 	for(uint i=0; i<_dico_colors.size(); i++){
 		ColorRGB min = _dico_colors[i]->getMin();
