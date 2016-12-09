@@ -22,7 +22,7 @@ public:
 	void save_calibration(std::string file);
 	void open_calibration(std::string file);
 
-	Color getColor();
+	int getColor();
 	ColorRGB getColorRGB();
 
 private:

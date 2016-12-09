@@ -32,12 +32,9 @@ int main(int argc, char* argv[]){
 		}
 	}
 
-
 	sn_color.open_calibration("calibration.calib");
 
-	
 	line_follow(engine, sn_color);
-
 	engine.stop();
 
 	return 0;
@@ -51,7 +48,7 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 	Direction lastDir = Direction::RIGHT;
 
 	while(true){
-		if(sn_color.getColor() != Color::WHITE){
+		if(sn_color.getColor() != 0){
 			
 			cout << "BLACK -> FORWARD" << endl;
 			engine.setDirection(Direction::FORWARD);
@@ -73,7 +70,7 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 			begin_time = clock();
 
 			while(elapsed_time < search_time) {
-				if(sn_color.getColor() != Color::WHITE){
+				if(sn_color.getColor() != 0){
 					cout << "LINE FOUND" << endl;
 					on_line = true;
 					break;
@@ -122,7 +119,7 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 				begin_time = clock();
 				
 				while(elapsed_time < search_time) {
-					if(sn_color.getColor() != Color::WHITE){
+					if(sn_color.getColor() != 0){
 						cout << "LINE FOUND" << endl;
 						on_line = true;
 						break;
@@ -172,7 +169,7 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 				begin_time = clock();
 				
 				while(elapsed_time < search_time) {
-					if(sn_color.getColor() != Color::WHITE){
+					if(sn_color.getColor() != 0){
 						cout << "LINE FOUND" << endl;
 						on_line = true;
 						break;
@@ -186,45 +183,20 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 			if(on_line == false){
 				break;
 			}
-
 		}
 	}
 }
 
 void scan_color(ColorSensor& cs){
+	std::string rep = "";
+
 	while(true){
-		cout << " -> Scan color (Press Enter): ";
-		cin.ignore();
+		cout << " -> Scan color (Press Enter) [q]Quit : ";
+		rep = std::cin.get();
 
-		Color color = cs.getColor();
-		switch(color){
-			case Color::RED:
-				cout << "RED" << endl;
-			break;
-
-			case Color::GREEN:
-				cout << "GREEN" << endl;
-			break;
-
-			case Color::BLUE:
-				cout << "BLUE" << endl;
-			break;
-
-			case Color::YELLOW:
-				cout << "YELLOW" << endl;
-			break;
-
-			case Color::WHITE:
-				cout << "WHITE" << endl;
-			break;
-
-			case Color::BLACK:
-				cout << "BLACK" << endl;
-			break;
-
-			case Color::UNKNOW:
-				cout << "UNKNOW" << endl;
+		if(rep.compare("q") == 0){
 			break;
 		}
+		cout << " # Référence n°" << cs.getColor() << std::endl;
 	}
 }

@@ -7,7 +7,7 @@
 
 class ColorEntry {
 public:
-	ColorEntry(Color color);
+	ColorEntry();
 	virtual ~ColorEntry();
 
 	void setMin(ColorRGB min);
@@ -15,11 +15,8 @@ public:
 
 	ColorRGB getMin();
 	ColorRGB getMax();
-	Color getColor();
-
 
 private:
-	Color _color;
 	ColorRGB _min;
 	ColorRGB _max;
 

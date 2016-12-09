@@ -1,4 +1,5 @@
 #include <string>
+#include <string.h>
 #include <sstream>
 #include <fstream>
 #include <math.h>
@@ -10,13 +11,6 @@ ColorSensor::ColorSensor()
 {
 	_sensor = new color_sensor(INPUT_1);
 	_sensor->set_mode("RGB-RAW");
-
-	_dico_colors.push_back(new ColorEntry(Color::RED));
-	_dico_colors.push_back(new ColorEntry(Color::GREEN));
-	_dico_colors.push_back(new ColorEntry(Color::BLUE));
-	_dico_colors.push_back(new ColorEntry(Color::YELLOW));
-	_dico_colors.push_back(new ColorEntry(Color::WHITE));
-	_dico_colors.push_back(new ColorEntry(Color::BLACK));
 
 }
 
@@ -31,21 +25,31 @@ ColorSensor::~ColorSensor()
 
 void ColorSensor::calibration()
 {
+	std::string rep = "";
 	int samples = 50;
 	ColorRGB min; // 1020 = valeur maxi du capteur
 	ColorRGB max;
+	ColorEntry* entry;
 
 	std::cout << " # Calibration ..." << std::endl;
 	std::cout << " ------------------------------" << std::endl;
 
-	for(uint i=0; i<_dico_colors.size(); i++){
+	while(true){
+		std::cout << "Press ENTER to add new color. [q]Quit : ";
+		rep = std::cin.get();
 
-		std::cout << " -> " << *(_dico_colors[i]) << " reference. (Press Enter): ";
-		std::cin.ignore();
+		if(rep.compare("q") == 0){
+			break;
+		}
+
 		sampling(samples, min, max);
 
-		_dico_colors[i]->setMin(min);
-		_dico_colors[i]->setMax(max);
+		entry = new ColorEntry();
+		entry->setMin(min);
+		entry->setMax(max);
+
+		_dico_colors.push_back(entry);
+		std::cout << " -> Color reference n°" << _dico_colors.size() << " added." << std::endl;
 	}
 
 	std::cout << " ------------------------------" << std::endl;
@@ -131,6 +135,7 @@ void ColorSensor::save_calibration(std::string file)
 void ColorSensor::open_calibration(std::string file)
 {
 
+	ColorEntry* entry;
 	std::string line;
 	std::ifstream in_file(file);
 
@@ -152,8 +157,11 @@ void ColorSensor::open_calibration(std::string file)
     	ColorRGB min(std::stoi(values[0]), std::stoi(values[1]), std::stoi(values[2]));
 			ColorRGB max(std::stoi(values[3]), std::stoi(values[4]), std::stoi(values[5]));
 
-			_dico_colors[no_line]->setMin(min);
-			_dico_colors[no_line]->setMax(max);
+
+			entry = new ColorEntry();
+			entry->setMin(min);
+			entry->setMax(max);
+			_dico_colors.push_back(entry);
 
 			no_line++;
     }
@@ -163,10 +171,10 @@ void ColorSensor::open_calibration(std::string file)
   else std::cout << "Unable to open file" << std::endl; 
 }
 
-Color ColorSensor::getColor()
+int ColorSensor::getColor()
 {
 	ColorRGB current;
-	ColorEntry entry(Color::UNKNOW);
+	int indice = -1;
 	int distance = 1020;
 
 	sampling(5, current);
@@ -177,11 +185,11 @@ Color ColorSensor::getColor()
 	
 		if( (current.distanceOf(min) < distance) || (current.distanceOf(max) < distance) ){
 			distance = current.distanceOf(min);
-			entry = *(_dico_colors[i]);
+			indice = i;
 		}
 	}
 
-	return entry.getColor();
+	return indice;
 }
 
 
