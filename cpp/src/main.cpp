@@ -25,11 +25,16 @@ int main(int argc, char* argv[]){
 			sn_color.save_calibration("calibration.calib");
 			exit(0);
 		}
+		if(strcmp(argv[1], "-s") == 0){
+			sn_color.open_calibration("calibration.calib");
+			scan_color(sn_color);
+			exit(0);
+		}
 	}
 
 
 	sn_color.open_calibration("calibration.calib");
-	//scan_color(sn_color);
+
 	
 	line_follow(engine, sn_color);
 
@@ -59,7 +64,6 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 			engine.stop();
 			on_line = false;
 
-			
 			//-------------------------------------------
 			// SEARCH LASTDIR
 			//-------------------------------------------
@@ -74,9 +78,9 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 					on_line = true;
 					break;
 				}
-
 				elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
 			}
+
 			engine.stop();
 			sleep(0.5);
 
@@ -117,16 +121,15 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 				engine.run();
 				begin_time = clock();
 				
-
 				while(elapsed_time < search_time) {
 					if(sn_color.getColor() != Color::WHITE){
 						cout << "LINE FOUND" << endl;
 						on_line = true;
 						break;
 					}
-
 					elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
 				}
+
 				engine.stop();
 				sleep(0.5);	
 
@@ -174,7 +177,6 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 						on_line = true;
 						break;
 					}
-
 					elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
 				}		
 				engine.stop();
@@ -186,9 +188,7 @@ void line_follow(Engine& engine, ColorSensor& sn_color){
 			}
 
 		}
-
 	}
-
 }
 
 void scan_color(ColorSensor& cs){

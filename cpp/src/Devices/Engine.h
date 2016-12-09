@@ -18,7 +18,7 @@ public:
 	bool running();
 
 private:
-	int _speed = 20;
+	int _speed = 30;
 	bool _run = false;
 	Direction _direction; 
 	ev3dev::large_motor* _motor_R;
