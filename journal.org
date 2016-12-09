@@ -1,3 +1,10 @@
+* <2016-12-09>
+** Fait:
+   - Calibration semble marcher. Test sur le tapis de jalon TB.
+   - Suivi de ligne droite
+** A faire:
+   - Revoir le suivi de ligne, peut-être d'une autre façon...
+** A faire:
 * <2016-11-14>
 ** Fait:
    - Monté le robot
