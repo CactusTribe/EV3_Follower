@@ -1,14 +1,10 @@
 /**
   ******************************************************************************
-  * @file    I2C/I2C_TwoBoards_AdvComIT/Inc/stm32f7xx_it.h 
-  * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    30-December-2016 
+  * @file    stm32f7xx_it.h
   * @brief   This file contains the headers of the interrupt handlers.
   ******************************************************************************
-  * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * COPYRIGHT(c) 2015 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -40,8 +36,8 @@
 #define __STM32F7xx_IT_H
 
 #ifdef __cplusplus
- extern "C" {
-#endif 
+extern "C" {
+#endif
 
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
@@ -58,8 +54,9 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
-void I2Cx_EV_IRQHandler(void);
-void I2Cx_ER_IRQHandler(void);
+void DMA2_Stream1_IRQHandler(void);
+void DCMI_IRQHandler(void);
+
 #ifdef __cplusplus
 }
 #endif

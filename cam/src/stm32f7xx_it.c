@@ -1,16 +1,10 @@
 /**
   ******************************************************************************
-  * @file    I2C/I2C_TwoBoards_AdvComIT/Src/stm32f7xx_it.c 
-  * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    30-December-2016 
-  * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
-  *          peripherals interrupt service routine.
+  * @file    stm32f7xx_it.c
+  * @brief   Interrupt Service Routines.
   ******************************************************************************
-  * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * COPYRIGHT(c) 2015 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -45,7 +39,7 @@
   * @{
   */
 
-/** @addtogroup I2C_TwoBoards_ComIT
+/** @addtogroup DCMI_CaptureMode
   * @{
   */
 
@@ -53,9 +47,6 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/* I2C handler declared in "main.c" file */
-extern I2C_HandleTypeDef I2cHandle;
-
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -64,7 +55,7 @@ extern I2C_HandleTypeDef I2cHandle;
 /******************************************************************************/
 
 /**
-  * @brief  This function handles NMI exception.
+  * @brief   This function handles NMI exception.
   * @param  None
   * @retval None
   */
@@ -161,33 +152,32 @@ void SysTick_Handler(void)
   HAL_IncTick();
 }
 
+/**
+  * @brief  DMA interrupt handler.
+  * @param  None
+  * @retval None
+  */
+void DMA2_Stream1_IRQHandler(void)
+{
+  BSP_CAMERA_DMA_IRQHandler();
+}
+
+/**
+  * @brief  DCMI interrupt handler.
+  * @param  None
+  * @retval None
+  */
+void DCMI_IRQHandler(void)
+{
+  BSP_CAMERA_IRQHandler();
+}
+
 /******************************************************************************/
-/*                 STM32F7xx Peripherals Interrupt Handlers                  */
+/*                stm32f7xx  Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f7xx.s).                                               */
 /******************************************************************************/
-/**
-  * @brief  This function handles I2C event interrupt request.
-  * @param  None
-  * @retval None
-  * @Note   This function is redefined in "main.h" and related to I2C data transmission
-  */
-void I2Cx_EV_IRQHandler(void)
-{
-  HAL_I2C_EV_IRQHandler(&I2cHandle);
-}
-
-/**
-  * @brief  This function handles I2C error interrupt request.
-  * @param  None
-  * @retval None
-  * @Note   This function is redefined in "main.h" and related to I2C error
-  */
-void I2Cx_ER_IRQHandler(void)
-{
-  HAL_I2C_ER_IRQHandler(&I2cHandle);
-}
 
 /**
   * @brief  This function handles PPP interrupt request.
@@ -197,6 +187,7 @@ void I2Cx_ER_IRQHandler(void)
 /*void PPP_IRQHandler(void)
 {
 }*/
+
 
 /**
   * @}
