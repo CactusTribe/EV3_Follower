@@ -20,6 +20,11 @@ void ColorEntry::setMax(ColorRGB max)
 	_max = max;
 }
 
+void ColorEntry::setName(std::string name)
+{
+	_name = name;
+}
+
 ColorRGB ColorEntry::getMin()
 {
 	return _min;
@@ -28,6 +33,11 @@ ColorRGB ColorEntry::getMin()
 ColorRGB ColorEntry::getMax()
 {
 	return _max;
+}
+
+std::string ColorEntry::getName()
+{
+	return _name;
 }
 
 std::ostream& operator<<(std::ostream& out, ColorEntry& c)

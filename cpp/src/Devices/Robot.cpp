@@ -32,7 +32,7 @@ void Robot::scan_color(){
 		if(rep.compare("q") == 0){
 			break;
 		}
-		std::cout << " # Référence n°" << _sn_color->getColor() << std::endl;
+		std::cout << " # Référence " << _sn_color->getColor() << std::endl;
 	}
 }
 

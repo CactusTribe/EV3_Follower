@@ -12,11 +12,14 @@ public:
 
 	void setMin(ColorRGB min);
 	void setMax(ColorRGB max);
+	void setName(std::string name);
 
 	ColorRGB getMin();
 	ColorRGB getMax();
+	std::string getName();
 
 private:
+	std::string _name = "";
 	ColorRGB _min;
 	ColorRGB _max;
 

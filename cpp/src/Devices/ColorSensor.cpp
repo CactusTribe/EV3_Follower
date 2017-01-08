@@ -42,14 +42,18 @@ void ColorSensor::calibration()
 			break;
 		}
 
+		std::cout << " - Name of reference : ";
+		std::getline(std::cin, rep);
+
 		sampling(samples, min, max);
 
 		entry = new ColorEntry();
+		entry->setName(rep); 
 		entry->setMin(min);
 		entry->setMax(max);
 
 		_dico_colors.push_back(entry);
-		std::cout << " -> Color reference n°" << _dico_colors.size() << " added." << std::endl;
+		std::cout << " -> Color reference n°" << _dico_colors.size()-1 << " (" << rep << ") added." << std::endl;
 	}
 
 	std::cout << " ------------------------------" << std::endl;
