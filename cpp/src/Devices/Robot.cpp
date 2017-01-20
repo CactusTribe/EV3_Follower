@@ -43,11 +43,17 @@ void Robot::line_follow(){
 	clock_t begin_time = 0;
 	double elapsed_time = 0;
 	double search_time = 0.2;
+
 	bool on_line = false;
 	Direction lastDir = Direction::RIGHT;
+	_engine->setSpeed(30);
+
+	// GET BACKGROUND COLOR
+	int background = _sn_color->getColor();
+	std::cout << "BG COLOR # " << background << " (" << _sn_color->getColorName(background) << ")" << std::endl;
 
 	while(true){
-		if(_sn_color->getColor() != 0){
+		if(_sn_color->getColor() != background){
 			_engine->setDirection(Direction::FORWARD);
 			_engine->run();
 			on_line = true;
@@ -66,7 +72,7 @@ void Robot::line_follow(){
 			begin_time = clock();
 
 			while(elapsed_time < search_time) {
-				if(_sn_color->getColor() != 0){
+				if(_sn_color->getColor() != background){
 					std::cout << "LINE FOUND" << std::endl;
 					on_line = true;
 					break;
@@ -115,7 +121,7 @@ void Robot::line_follow(){
 				begin_time = clock();
 				
 				while(elapsed_time < search_time) {
-					if(_sn_color->getColor() != 0){
+					if(_sn_color->getColor() != background){
 						std::cout << "LINE FOUND" << std::endl;
 						on_line = true;
 						break;
@@ -165,7 +171,7 @@ void Robot::line_follow(){
 				begin_time = clock();
 				
 				while(elapsed_time < search_time) {
-					if(_sn_color->getColor() != 0){
+					if(_sn_color->getColor() != background){
 						std::cout << "LINE FOUND" << std::endl;
 						on_line = true;
 						break;
