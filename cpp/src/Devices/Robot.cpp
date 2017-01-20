@@ -26,13 +26,16 @@ void Robot::scan_color(){
 	std::string rep = "";
 
 	while(true){
-		std::cout << " -> Scan color (Press Enter) [q]Quit : ";
+		std::cout << " -> [Enter]Scan [q]Quit : ";
 		rep = std::cin.get();
 
 		if(rep.compare("q") == 0){
 			break;
 		}
-		std::cout << " # Référence " << _sn_color->getColor() << std::endl;
+		int color_ref = _sn_color->getColor();
+		std::string color_name = _sn_color->getColorName(color_ref);
+
+		std::cout << " Color #" << color_ref << " (" << color_name << ")" << std::endl;
 	}
 }
 

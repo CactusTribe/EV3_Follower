@@ -23,6 +23,7 @@ public:
 	void open_calibration(std::string file);
 
 	int getColor();
+	std::string getColorName(int ref);
 	ColorRGB getColorRGB();
 
 private:

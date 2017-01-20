@@ -19,7 +19,7 @@ public:
 	std::string getName();
 
 private:
-	std::string _name = "";
+	std::string _name = "UNKNOW";
 	ColorRGB _min;
 	ColorRGB _max;
 

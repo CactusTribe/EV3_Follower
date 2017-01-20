@@ -36,7 +36,7 @@ void ColorSensor::calibration()
 
 	while(true){
 		std::cout << "Press ENTER to add new color. [q]Quit : ";
-		rep = std::cin.get();
+		std::getline(std::cin, rep);
 
 		if(rep.compare("q") == 0){
 			break;
@@ -44,6 +44,10 @@ void ColorSensor::calibration()
 
 		std::cout << " - Name of reference : ";
 		std::getline(std::cin, rep);
+
+		if(rep.compare("") == 0){
+			rep = "UNKNOW";
+		}
 
 		sampling(samples, min, max);
 
@@ -121,6 +125,7 @@ void ColorSensor::save_calibration(std::string file)
 {
 	ColorRGB min;
 	ColorRGB max;
+	std::string name;
 
 	std::ofstream out_file;
 	out_file.open(file);
@@ -128,8 +133,9 @@ void ColorSensor::save_calibration(std::string file)
 	for(uint i=0; i<_dico_colors.size(); i++){
 		min = _dico_colors[i]->getMin();
 		max = _dico_colors[i]->getMax();
+		name = _dico_colors[i]->getName();
 
-		out_file << min << max << "\n";
+		out_file << name << " " << min << max << "\n";
 
 	}
 
@@ -158,13 +164,15 @@ void ColorSensor::open_calibration(std::string file)
 				values.push_back(sub);
 			} while (iss);
 
-    	ColorRGB min(std::stoi(values[0]), std::stoi(values[1]), std::stoi(values[2]));
-			ColorRGB max(std::stoi(values[3]), std::stoi(values[4]), std::stoi(values[5]));
+			std::string name = values[0];
+    	ColorRGB min(std::stoi(values[1]), std::stoi(values[2]), std::stoi(values[3]));
+			ColorRGB max(std::stoi(values[4]), std::stoi(values[5]), std::stoi(values[6]));
 
 
 			entry = new ColorEntry();
 			entry->setMin(min);
 			entry->setMax(max);
+			entry->setName(name);
 			_dico_colors.push_back(entry);
 
 			no_line++;
@@ -194,6 +202,11 @@ int ColorSensor::getColor()
 	}
 
 	return indice;
+}
+
+std::string ColorSensor::getColorName(int ref)
+{
+	return _dico_colors[ref]->getName();
 }
 
 
