@@ -17,6 +17,8 @@ public:
 	void scan_color();
 	void line_follow();
 
+	bool search_line(Direction dir, int bg_color, double seconds);
+
 private:
 	Engine* _engine;
 	ColorSensor* _sn_color;

@@ -39,12 +39,41 @@ void Robot::scan_color(){
 	}
 }
 
-void Robot::line_follow(){
+bool Robot::search_line(Direction dir, int bg_color, double seconds){
 	clock_t begin_time = 0;
 	double elapsed_time = 0;
-	double search_time = 0.2;
+	
+	if(dir == Direction::RIGHT){
+		std::cout << " -> SEARCH RIGHT" << std::endl;
+		_engine->setDirection(Direction::RIGHT);
+		_engine->run();
+	}
+	else if(dir == Direction::LEFT){
+		std::cout << " -> SEARCH LEFT" << std::endl;
+		_engine->setDirection(Direction::LEFT);
+		_engine->run();
+	}
+	else{
+		return false;
+	}
+	
+	begin_time = clock();
+	while(elapsed_time < seconds) {
+		if(_sn_color->getColor() != bg_color){
+			std::cout << "LINE FOUND" << std::endl;
+			return true;
+		}
+		elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
+	}
 
+	return false;
+}
+
+void Robot::line_follow(){
+
+	// INITIALISATION
 	bool on_line = false;
+	double search_time = 0.1;
 	Direction lastDir = Direction::RIGHT;
 	_engine->setSpeed(30);
 
@@ -53,139 +82,31 @@ void Robot::line_follow(){
 	std::cout << "BG COLOR # " << background << " (" << _sn_color->getColorName(background) << ")" << std::endl;
 
 	while(true){
+		// Si on est sur la ligne
 		if(_sn_color->getColor() != background){
 			_engine->setDirection(Direction::FORWARD);
 			_engine->run();
-			on_line = true;
 		}
 		else{
-			std::cout << "LINE LOOSE" << std::endl;
-			_engine->stop();
-			on_line = false;
+			on_line = search_line(lastDir, background, search_time);
 
-			//-------------------------------------------
-			// SEARCH LASTDIR
-			//-------------------------------------------
-			std::cout << " -> SEARCH LASTDIR" << std::endl;
-			_engine->setDirection(lastDir);
-			_engine->run();
-			begin_time = clock();
-
-			while(elapsed_time < search_time) {
-				if(_sn_color->getColor() != background){
-					std::cout << "LINE FOUND" << std::endl;
-					on_line = true;
-					break;
-				}
-				elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
-			}
-
-			_engine->stop();
-			sleep(0.5);
-
-			if(on_line == false){
-				// Retour sur l'alignement
-				elapsed_time = 0;
-
+			if(!on_line){
 				if(lastDir == Direction::LEFT){
-					_engine->setDirection(Direction::RIGHT);
+					on_line = search_line(Direction::RIGHT, background, 1000);
 					lastDir = Direction::RIGHT;
 				}
 				else if(lastDir == Direction::RIGHT){
-					_engine->setDirection(Direction::LEFT);
+					on_line = search_line(Direction::LEFT, background, search_time * 2);
 					lastDir = Direction::LEFT;
 				}
 
-				_engine->run();
-				begin_time = clock();
-
-				while(elapsed_time < search_time) {
-					elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
+				if(!on_line){
+					lastDir = Direction::RIGHT;
 				}
-
-				_engine->stop();
-				sleep(0.5);	
-			}
-			//------------------------------------------
-
-
-			//-------------------------------------------
-			// SEARCH -LASTDIR
-			//-------------------------------------------
-			if(on_line == false){
-				// Cherche la ligne à gauche
-				std::cout << " -> SEARCH -LASTDIR" << std::endl;
-				elapsed_time = 0;
-				_engine->setDirection(lastDir);
-				_engine->run();
-				begin_time = clock();
-				
-				while(elapsed_time < search_time) {
-					if(_sn_color->getColor() != background){
-						std::cout << "LINE FOUND" << std::endl;
-						on_line = true;
-						break;
-					}
-					elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
-				}
-
-				_engine->stop();
-				sleep(0.5);	
-
-				if(on_line == false){
-					//Retour sur l'alignement
-
-					if(lastDir == Direction::LEFT){
-						_engine->setDirection(Direction::RIGHT);
-						lastDir = Direction::RIGHT;
-					}
-					else if(lastDir == Direction::RIGHT){
-						_engine->setDirection(Direction::LEFT);
-						lastDir = Direction::LEFT;
-					}
-
-					_engine->run();
-					begin_time = clock();
-					elapsed_time = 0;
-
-					while(elapsed_time < search_time) {
-						elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
-					}
-
-					_engine->stop();
-					sleep(0.5);		
-				}	
-			}
-			//------------------------------------------
-
-
-			//-------------------------------------------
-			// SEARCH FORWARD
-			//-------------------------------------------
-			if(on_line == false){
-				// Cherche la ligne devant
-				std::cout << " -> SEARCH FORWARD" << std::endl;
-				elapsed_time = 0;
-				_engine->setDirection(Direction::FORWARD);
-				_engine->run();
-				begin_time = clock();
-				
-				while(elapsed_time < search_time) {
-					if(_sn_color->getColor() != background){
-						std::cout << "LINE FOUND" << std::endl;
-						on_line = true;
-						break;
-					}
-					elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
-				}		
-				_engine->stop();
-				sleep(0.5);		
-			}
-
-			if(on_line == false){
-				break;
 			}
 		}
 	}
 }
+
+
 
