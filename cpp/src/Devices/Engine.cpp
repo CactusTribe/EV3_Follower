@@ -50,12 +50,12 @@ void Engine::run()
 			_motor_R->set_duty_cycle_sp(_speed * -1);
 		break;
 		case Direction::LEFT:
-			_motor_L->set_duty_cycle_sp(_speed * -1);
+			_motor_L->set_duty_cycle_sp(_speed * -0.5);
 			_motor_R->set_duty_cycle_sp(_speed);
 		break;
 		case Direction::RIGHT:
 			_motor_L->set_duty_cycle_sp(_speed);
-			_motor_R->set_duty_cycle_sp(_speed * -1);
+			_motor_R->set_duty_cycle_sp(_speed * -0.5);
 		break;
 		default:
 			_motor_L->set_duty_cycle_sp(0);
