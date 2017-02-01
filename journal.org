@@ -1,3 +1,10 @@
+* <2016-02-01>
+** Fait:
+   - Suivi de ligne courbe très intéressant
+** À faire:
+   - Modifier le comportement lorsqu'il est complètement perdu (spirale ou autre)
+   - Faire un algo adaptatif qui saurait s'il est actuellement en ligne droite ou en courbe et donc éviter qu'en courbe il ralentisse autant
+   - et/ou Reconstruire le parcours dans une bitmap ou vectoriellement
 * <2016-12-09>
 ** Fait:
    - Calibration semble marcher. Test sur le tapis de jalon TB.
