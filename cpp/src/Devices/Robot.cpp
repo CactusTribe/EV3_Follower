@@ -75,7 +75,7 @@ void Robot::line_follow(){
 	bool on_line = false;
 	double search_time = 0.1;
 	Direction lastDir = Direction::RIGHT;
-	_engine->setSpeed(50);
+	_engine->setSpeed(40);
 
 	// GET BACKGROUND COLOR
 	int background = _sn_color->getColor();

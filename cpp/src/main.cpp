@@ -21,6 +21,7 @@ int main(int argc, char* argv[]){
   sigIntHandler.sa_flags = 0;
   sigaction(SIGINT, &sigIntHandler, NULL);
 
+  sleep(1);
 
 	if(argc > 1){
 		if(strcmp(argv[1], "-c") == 0){
