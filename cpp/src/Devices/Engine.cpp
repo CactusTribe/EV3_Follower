@@ -32,24 +32,14 @@ void Engine::_updateDutyCycle()
 void Engine::setSpeed(int speed)
 {
 	_speed = speed;
-	_updateDutyCycle();
+	//_updateDutyCycle();
 }
 
 void Engine::setDirection(Direction dir)
 {
 	_direction = dir;
-}
 
-void Engine::setRatio(DutyRatio ratio)
-{
-  _ratio= ratio;
-  _updateDutyCycle();
-}
-
-void Engine::run()
-{
-
- switch(_direction){
+ 	switch(_direction){
     case Direction::FORWARD:
       setRatio(DutyCycleRatio::FORWARD);
     break;
@@ -66,16 +56,21 @@ void Engine::run()
       setRatio(DutyCycleRatio::STOP);
     break;
   }
+}
 
-	//_motor_L->run_direct();
-	//_motor_R->run_direct();
+void Engine::setRatio(DutyRatio ratio)
+{
+  _ratio = ratio;
+  _updateDutyCycle();
+}
+
+void Engine::run()
+{
 	_run = true;
 }
 
 void Engine::stop()
 {
-	//_motor_L->stop();
-	//_motor_R->stop();
 	_motor_L->set_duty_cycle_sp(0);
 	_motor_R->set_duty_cycle_sp(0);
 	_run = false;

@@ -1,7 +1,12 @@
 #include "Robot.h"
 
-#define SPEED 50
-#define SEARCH_SPEED 35
+#define SPEED 60
+
+#define SEARCH_SPEED 60
+#define SEARCH_TIME 0.2
+
+#define CORRECT_SPEED 50
+#define CORRECT_TIME 0.1
 
 Robot::Robot()
 {
@@ -49,14 +54,14 @@ bool Robot::search_line(Direction dir, int bg_color, double seconds){
 	_engine->setSpeed(SEARCH_SPEED);
 	
 	if(dir == Direction::RIGHT){
-		std::cout << " -> SEARCH RIGHT" << std::endl;
+		//std::cout << " -> SEARCH RIGHT" << std::endl;
 		_engine->setDirection(Direction::RIGHT);
-		_engine->run();
+		//_engine->run();
 	}
 	else if(dir == Direction::LEFT){
-		std::cout << " -> SEARCH LEFT" << std::endl;
+		//std::cout << " -> SEARCH LEFT" << std::endl;
 		_engine->setDirection(Direction::LEFT);
-		_engine->run();
+		//_engine->run();
 	}
 	else{
 		return false;
@@ -65,11 +70,12 @@ bool Robot::search_line(Direction dir, int bg_color, double seconds){
 	begin_time = clock();
 	while(elapsed_time < seconds) {
 		if(_sn_color->getColor() != bg_color){
-			std::cout << "LINE FOUND" << std::endl;
-			_engine->setSpeed(0);
+			//std::cout << "LINE FOUND" << std::endl;
+			//_engine->setSpeed(0);
 			return true;
 		}
 		elapsed_time = double(clock() - begin_time) / CLOCKS_PER_SEC;
+		sleep(0.01);
 	}
 
 	return false;
@@ -79,31 +85,42 @@ void Robot::line_follow(){
 
 	// INITIALISATION
 	bool on_line = false;
-	double search_time = 0.2;
-	Direction lastDir = Direction::RIGHT;
-	_engine->setSpeed(SPEED);
-
-	// GET BACKGROUND COLOR
+	Direction lastDir = Direction::LEFT;
+	Direction lastDirCorrection = Direction::LEFT;
 	int background = _sn_color->getColor();
-	std::cout << "BG COLOR # " << background << " (" << _sn_color->getColorName(background) << ")" << std::endl;
+
+	_engine->setSpeed(SPEED);
+	_engine->setDirection(Direction::FORWARD);
+	//std::cout << "BG COLOR # " << background << " (" << _sn_color->getColorName(background) << ")" << std::endl;
 
 	while(true){
 		// Si on est sur la ligne
 		if(_sn_color->getColor() != background){
-			_engine->setDirection(Direction::FORWARD);
 			_engine->setSpeed(SPEED);
-			_engine->run();
+			_engine->setDirection(Direction::FORWARD);
+			//_engine->run();
 		}
 		else{
-			on_line = search_line(lastDir, background, search_time);
 
+			// Correction de la trajectoire
+			if(lastDirCorrection == Direction::LEFT){
+					on_line = search_line(Direction::RIGHT, background, CORRECT_TIME);
+					lastDirCorrection = Direction::RIGHT;
+			}
+			else{
+					on_line = search_line(Direction::LEFT, background, CORRECT_TIME);
+					lastDirCorrection = Direction::LEFT;
+			}
+
+			//on_line = search_line(lastDir, background, CORRECT_TIME);
+			// Si la correction ne suffit pas a trouver la ligne
 			if(!on_line){
-				if(lastDir == Direction::LEFT){
-					on_line = search_line(Direction::RIGHT, background, 10);
+				if(lastDirCorrection == Direction::LEFT){
+					on_line = search_line(Direction::RIGHT, background, SEARCH_TIME);
 					lastDir = Direction::RIGHT;
 				}
-				else if(lastDir == Direction::RIGHT){
-					on_line = search_line(Direction::LEFT, background, search_time * 2);
+				else{
+					on_line = search_line(Direction::LEFT, background, SEARCH_TIME);
 					lastDir = Direction::LEFT;
 				}
 
@@ -111,9 +128,8 @@ void Robot::line_follow(){
 					lastDir = Direction::RIGHT;
 				}
 			}
+
 		}
 	}
 }
-
-
 
