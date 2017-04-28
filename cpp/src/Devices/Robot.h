@@ -18,7 +18,8 @@ public:
 	void line_follow();
 
 	bool search_line(Direction dir, int bg_color, double seconds);
-	
+	Direction getOpposedDir(Direction dir);
+
 private:
 	Engine* _engine;
 	ColorSensor* _sn_color;

@@ -51,6 +51,8 @@ int main(int argc, char* argv[]){
   
   robot.getEngine().stop();
   close(file_log);
+  close(STDERR_FILENO);
+  
   return 0;
 }
 

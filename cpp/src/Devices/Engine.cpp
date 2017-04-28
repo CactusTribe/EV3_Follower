@@ -9,9 +9,6 @@ Engine::Engine()
 
 	_direction = Direction::FORWARD;
 	_run = false;
-	
-	_motor_L->run_direct();
-	_motor_R->run_direct();
 }
 
 Engine::~Engine()
@@ -66,6 +63,8 @@ void Engine::setRatio(DutyRatio ratio)
 
 void Engine::run()
 {
+	_motor_L->run_direct();
+	_motor_R->run_direct();
 	_run = true;
 }
 
@@ -73,6 +72,13 @@ void Engine::stop()
 {
 	_motor_L->set_duty_cycle_sp(0);
 	_motor_R->set_duty_cycle_sp(0);
+
+	_motor_L->set_stop_action("brake");
+	_motor_R->set_stop_action("brake");
+
+	_motor_L->stop();
+	_motor_R->stop();
+
 	_run = false;
 }
 
