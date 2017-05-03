@@ -1,3 +1,8 @@
+* <2017-05-04>
+** Fait:
+   - Algorithme de suivi de ligne
+** A faire:
+   - Apprentissage des virages
 * <2016-02-01>
 ** Fait:
    - Suivi de ligne courbe très intéressant
