@@ -7,6 +7,8 @@
 #define SEARCH_TIME 0.4
 #define CORRECT_TIME 0.2
 
+#define DELAY_CORRECTION 0.1
+
 Robot::Robot()
 {
 	sleep(2);
@@ -91,11 +93,12 @@ Direction Robot::getOpposedDir(Direction dir){
 void Robot::line_follow(){
 
 	// INITIALISATION
+	clock_t begin_time_found = 1;
+	double elapsed_time_found = 0;
 	bool on_line = false;
 	int background = _sn_color->getColor();
 
 	Direction linePosition = Direction::LEFT;
-	Direction lastDir = Direction::LEFT;
 
 	_engine->run();
 	_engine->setSpeed(SPEED);
@@ -113,17 +116,35 @@ void Robot::line_follow(){
 				_engine->setDirection(Direction::FORWARD);
 			}
 			else{
+				elapsed_time_found = double(clock() - begin_time_found) / CLOCKS_PER_SEC; 
 
 				/* Correction de trajectoire */
 				_engine->setSpeed(SEARCH_SPEED);
-				on_line = search_line(lastDir, background, CORRECT_TIME);
 
+				if(elapsed_time_found >= DELAY_CORRECTION){
+					on_line = search_line(linePosition, background, CORRECT_TIME);
+				}
+				else{
+					on_line = search_line(getOpposedDir(linePosition), background, CORRECT_TIME);
+					linePosition = getOpposedDir(linePosition);
+				}
+				
+				//linePosition = getOpposedDir(linePosition);
 
 				/* Si la correction échoue on va dans la direction opposée */
 				if(!on_line){
-					on_line = search_line(getOpposedDir(lastDir), background, SEARCH_TIME);
-					lastDir = getOpposedDir(lastDir);
-				}	
+					on_line = search_line(getOpposedDir(linePosition), background, SEARCH_TIME);
+					linePosition = getOpposedDir(linePosition);
+
+					if(on_line){
+						begin_time_found = clock();
+					}
+					//lastDir = getOpposedDir(lastDir);
+				}
+				else{
+					begin_time_found = clock();
+				}
+
 			}
 
 		}catch ( ... )
