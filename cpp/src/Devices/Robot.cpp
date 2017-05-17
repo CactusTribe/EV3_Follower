@@ -1,12 +1,11 @@
 #include "Robot.h"
 
 #define SPEED 60
+#define SEARCH_SPEED 60
+#define CORRECT_SPEED 60
 
-#define SEARCH_SPEED 50
 #define SEARCH_TIME 0.4
-
-#define CORRECT_SPEED 50
-#define CORRECT_TIME 0.1
+#define CORRECT_TIME 0.2
 
 Robot::Robot()
 {
@@ -95,6 +94,7 @@ void Robot::line_follow(){
 	bool on_line = false;
 	int background = _sn_color->getColor();
 
+	Direction linePosition = Direction::LEFT;
 	Direction lastDir = Direction::LEFT;
 
 	_engine->run();
@@ -103,25 +103,32 @@ void Robot::line_follow(){
 	//std::cout << "BG COLOR # " << background << " (" << _sn_color->getColorName(background) << ")" << std::endl;
 
 	while(true){
-		// Si on est sur la ligne
-		if(_sn_color->getColor() != background){
-			_engine->run();
-			_engine->setSpeed(SPEED);
-			_engine->setDirection(Direction::FORWARD);
-		}
-		else{
 
-			/* Correction de trajectoire */
-			_engine->setSpeed(SEARCH_SPEED);
-			on_line = search_line(lastDir, background, CORRECT_TIME);
+		try{
+
+			// Si on est sur la ligne
+			if(_sn_color->getColor() != background){
+				_engine->run();
+				_engine->setSpeed(SPEED);
+				_engine->setDirection(Direction::FORWARD);
+			}
+			else{
+
+				/* Correction de trajectoire */
+				_engine->setSpeed(SEARCH_SPEED);
+				on_line = search_line(lastDir, background, CORRECT_TIME);
 
 
-			/* Si la correction échoue on va dans la direction opposée */
-			if(!on_line){
-				on_line = search_line(getOpposedDir(lastDir), background, SEARCH_TIME);
-				lastDir = getOpposedDir(lastDir);
+				/* Si la correction échoue on va dans la direction opposée */
+				if(!on_line){
+					on_line = search_line(getOpposedDir(lastDir), background, SEARCH_TIME);
+					lastDir = getOpposedDir(lastDir);
+				}	
 			}
 
+		}catch ( ... )
+		{ 
+			std::cout << "Erreur inconnue.\n"; 
 		}
 	}
 }
