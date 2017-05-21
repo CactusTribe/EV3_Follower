@@ -4,7 +4,7 @@
 #define SEARCH_SPEED 60
 #define CORRECT_SPEED 60
 
-#define SEARCH_TIME 0.4
+#define SEARCH_TIME 0.3
 #define CORRECT_TIME 0.2
 
 #define DELAY_CORRECTION 0.1
@@ -122,12 +122,10 @@ void Robot::line_follow(){
 					std::cout << "BEGIN COLOR # " << begin_color << " (" << _sn_color->getColorName(begin_color) << ")" << std::endl;
 				}
 
-
 				if(current_color == begin_color){
-					double time_since_laps = double(clock() - laps_time) / CLOCKS_PER_SEC; 
-					int confirm_color = _sn_color->getColor();
+					double time_since_laps = double(clock() - laps_time) / CLOCKS_PER_SEC;
 
-					if(time_since_laps >= 10 && (confirm_color == begin_color)){
+					if(time_since_laps >= 10){
 						laps_time = clock();
 						std::cout << "###### LAPS ######" << std::endl;
 						nb_tours++;

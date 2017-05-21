@@ -197,9 +197,13 @@ int ColorSensor::getColor()
 	for(uint i=0; i<_dico_colors.size(); i++){
 		ColorRGB min = _dico_colors[i]->getMin();
 		ColorRGB max = _dico_colors[i]->getMax();
+
+		int average_dist = (current.distanceOf(min) + current.distanceOf(max)) / 2;
 	
-		if( (current.distanceOf(min) < distance) || (current.distanceOf(max) < distance) ){
-			distance = current.distanceOf(min);
+		//if( (current.distanceOf(min) < distance) || (current.distanceOf(max) < distance) ){
+		if(average_dist < distance){
+			//distance = current.distanceOf(min);
+			distance = average_dist;
 			indice = i;
 		}
 	}
