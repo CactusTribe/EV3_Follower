@@ -7,6 +7,9 @@
 
 using namespace ev3dev;
 
+#define READ_SAMPLES 5
+#define CALIB_SAMPLES 50
+
 ColorSensor::ColorSensor()
 {
 	_sensor = new color_sensor(INPUT_1);
@@ -26,7 +29,7 @@ ColorSensor::~ColorSensor()
 void ColorSensor::calibration()
 {
 	std::string rep = "";
-	int samples = 50;
+	int samples = CALIB_SAMPLES;
 	ColorRGB min; // 1020 = valeur maxi du capteur
 	ColorRGB max;
 	ColorEntry* entry;
@@ -189,7 +192,7 @@ int ColorSensor::getColor()
 	int indice = -1;
 	int distance = 1020;
 
-	sampling(5, current);
+	sampling(READ_SAMPLES, current);
 
 	for(uint i=0; i<_dico_colors.size(); i++){
 		ColorRGB min = _dico_colors[i]->getMin();

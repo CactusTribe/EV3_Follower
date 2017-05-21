@@ -8,6 +8,7 @@
 #define CORRECT_TIME 0.2
 
 #define DELAY_CORRECTION 0.1
+#define NB_LAPS 2
 
 Robot::Robot()
 {
@@ -54,11 +55,9 @@ bool Robot::search_line(Direction dir, int bg_color, double seconds){
 	double elapsed_time = 0;
 	
 	if(dir == Direction::RIGHT){
-		//std::cout << " -> SEARCH RIGHT" << std::endl;
 		_engine->setDirection(Direction::RIGHT);
 	}
 	else if(dir == Direction::LEFT){
-		//std::cout << " -> SEARCH LEFT" << std::endl;
 		_engine->setDirection(Direction::LEFT);
 	}
 	else{
@@ -69,7 +68,6 @@ bool Robot::search_line(Direction dir, int bg_color, double seconds){
 	begin_time = clock();
 	while(elapsed_time < seconds) {
 		if(_sn_color->getColor() != bg_color){
-			//std::cout << "LINE FOUND" << std::endl;
 			_engine->stop();
 			return true;
 		}
@@ -95,8 +93,12 @@ void Robot::line_follow(){
 	// INITIALISATION
 	clock_t begin_time_found = 1;
 	double elapsed_time_found = 0;
+	clock_t laps_time = 0;
+
 	bool on_line = false;
 	int background = _sn_color->getColor();
+	int begin_color = -1;
+	int nb_tours = 0;
 
 	Direction linePosition = Direction::LEFT;
 
@@ -108,9 +110,36 @@ void Robot::line_follow(){
 	while(true){
 
 		try{
+			int current_color = _sn_color->getColor();
 
 			// Si on est sur la ligne
-			if(_sn_color->getColor() != background){
+			if(current_color != background){
+
+				// Enregistrement de la couleur de départ
+				if(begin_color == -1){
+					begin_color = current_color;
+					laps_time = clock();
+					std::cout << "BEGIN COLOR # " << begin_color << " (" << _sn_color->getColorName(begin_color) << ")" << std::endl;
+				}
+
+
+				if(current_color == begin_color){
+					double time_since_laps = double(clock() - laps_time) / CLOCKS_PER_SEC; 
+					int confirm_color = _sn_color->getColor();
+
+					if(time_since_laps >= 10 && (confirm_color == begin_color)){
+						laps_time = clock();
+						std::cout << "###### LAPS ######" << std::endl;
+						nb_tours++;
+					}
+				}
+
+				// Si on est au dernier tour
+				if(nb_tours == NB_LAPS){
+					_engine->stop();
+					break;
+				}
+
 				_engine->run();
 				_engine->setSpeed(SPEED);
 				_engine->setDirection(Direction::FORWARD);
@@ -128,29 +157,21 @@ void Robot::line_follow(){
 					on_line = search_line(getOpposedDir(linePosition), background, CORRECT_TIME);
 					linePosition = getOpposedDir(linePosition);
 				}
-				
-				//linePosition = getOpposedDir(linePosition);
 
 				/* Si la correction échoue on va dans la direction opposée */
 				if(!on_line){
 					on_line = search_line(getOpposedDir(linePosition), background, SEARCH_TIME);
 					linePosition = getOpposedDir(linePosition);
 
-					if(on_line){
-						begin_time_found = clock();
-					}
-					//lastDir = getOpposedDir(lastDir);
+					if(on_line){ begin_time_found = clock(); }
+
 				}
 				else{
 					begin_time_found = clock();
 				}
-
 			}
 
-		}catch ( ... )
-		{ 
-			std::cout << "Erreur inconnue.\n"; 
-		}
+		}catch ( ... ) { std::cout << "Erreur inconnue.\n"; }
 	}
 }
 
