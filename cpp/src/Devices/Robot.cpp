@@ -1,11 +1,11 @@
 #include "Robot.h"
 
-#define SPEED 60
-#define SEARCH_SPEED 60
+#define SPEED 70
+#define SEARCH_SPEED 70
 #define CORRECT_SPEED 60
 
-#define SEARCH_TIME 0.3
-#define CORRECT_TIME 0.2
+#define SEARCH_TIME 0.2
+#define CORRECT_TIME 0.15
 
 #define DELAY_CORRECTION 0.1
 #define NB_LAPS 2

@@ -120,6 +120,8 @@ void ColorSensor::sampling(int samples, ColorRGB& min, ColorRGB& max)
 			min.set_blue(cur_b);
 		if(cur_b > max.blue())
 			max.set_blue(cur_b);
+
+		sleep(0.1);
 	}
 
 }
